@@ -10,7 +10,7 @@ var stylus = require('gulp-stylus')
 var concat = require('gulp-concat-css')
 var minify = require('gulp-minify-css')
 
-//JS
+//JS 
 var uglify=require('gulp-uglify');
 
 //JADE
@@ -18,15 +18,15 @@ var jade = require('gulp-jade')
 
 
 gulp.task('js', function() {
-    return gulp.src("lib/app.js")
+  return gulp.src("lib/js/app.js")
     //.pipe(uglify())
     .pipe(gulp.dest('./public/js'))// en dónde va a estar el archivo destino
-	.pipe(livereload())
+  .pipe(livereload())
 });
 
 
 gulp.task('styl', function() {
-  return gulp.src('./lib/app.styl') // entry point de styl
+  return gulp.src('./lib/styl/app.styl') // entry point de styl
     .pipe(stylus({ 
       use: nib(),
       'include css': true
@@ -38,21 +38,25 @@ gulp.task('styl', function() {
 })
 
 gulp.task('jade-components', function () {
-  return gulp.src('./lib/index.jade')
+  return gulp.src('./lib/views/index.jade')
   .pipe(jade({
     pretty: true
   }))
   .pipe(gulp.dest('./public'))
   .pipe(livereload());
-});
+})
+
+gulp.task('img', function () {
+  return gulp.src(['./lib/img/*.jpg', './lib/img/*.png'])
+  .pipe(gulp.dest('./public/img'))
+})
 
 gulp.task('watch', function(){
   livereload.listen()
-  gulp.watch('./lib/**/**/*.styl', ['styl'])
-  gulp.watch('./lib/**/**/*.css', ['styl'])
-  gulp.watch('./lib/**/**/*.jade', ['jade-components'])
-  gulp.watch('./lib/**/**/*.js', ['js'])
+  gulp.watch('./lib/styl/app.styl', ['styl'])
+  gulp.watch('./lib/views/index.jade', ['jade-components'])
+  gulp.watch('./lib/js/app.js', ['js'])
 })
 
 
-gulp.task('default', ['styl','jade-components', 'js', 'watch']) 
+gulp.task('default', ['img','styl','jade-components', 'js', 'watch'])
